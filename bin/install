@@ -27,18 +27,28 @@ install_sqlc() {
   fi
 }
 
-get_arch() {
+get_platform() {
   uname | tr '[:upper:]' '[:lower:]'
+}
+
+get_arch() {
+  local arch
+  arch="$(uname -m)"
+  if [[ $arch == "x86_64" ]]; then
+    echo "amd64"
+  else
+    echo "$arch"
+  fi
 }
 
 get_download_url() {
   local version="$1"
   local platform
   local cpu
-  platform="$(get_arch)"
-  cpu="amd64"
+  platform="$(get_platform)"
+  cpu="$(get_arch)"
 
-  echo "https://github.com/kyleconroy/sqlc/releases/download/v${version}/sqlc_${version}_${platform}_${cpu}.tar.gz"
+  echo "https://github.com/sqlc-dev/sqlc/releases/download/v${version}/sqlc_${version}_${platform}_${cpu}.tar.gz"
 }
 
 install_sqlc "$ASDF_INSTALL_TYPE" "$ASDF_INSTALL_VERSION" "$ASDF_INSTALL_PATH"
